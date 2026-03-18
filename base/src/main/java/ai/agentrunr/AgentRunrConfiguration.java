@@ -32,6 +32,8 @@ import org.springframework.core.io.Resource;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
 
@@ -72,7 +74,7 @@ public class AgentRunrConfiguration {
                 .defaultAdvisors(new SimpleLoggerAdvisor())
                 .defaultSystem(p -> p.text(agentPrompt).param(AgentEnvironment.ENVIRONMENT_INFO_KEY, AgentEnvironment.info()))
                 .defaultToolCallbacks(mcpToolProvider.getToolCallbacks())
-                .defaultToolCallbacks(SkillsTool.builder().addSkillsDirectory(workspace.getFilePath().resolve("skills").toString()).build())
+                .defaultToolCallbacks(SkillsTool.builder().addSkillsDirectory(skillsDir(workspace).toString()).build())
                 .defaultTools(
                         TaskTool.builder().taskManager(taskManager).build(),
                         CheckListTool.builder().build(),
@@ -91,5 +93,11 @@ public class AgentRunrConfiguration {
         braveWebSearchToolsObjectProvider.ifPresent(chatClientBuilder::defaultTools);
 
         return chatClientBuilder.build();
+    }
+
+    private static Path skillsDir(Resource workspace) throws IOException {
+        Path skillsDir = workspace.getFilePath().resolve("skills");
+        Files.createDirectories(skillsDir);
+        return skillsDir;
     }
 }
