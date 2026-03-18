@@ -6,6 +6,8 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
@@ -90,7 +92,7 @@ public class S5_McpStep implements OnboardingProvider {
 
     @Override
     @SuppressWarnings("unchecked")
-    public void saveConfiguration(Map<String, Object> session, ConfigurationManager configurationManager) throws IOException {
+    public void saveConfiguration(Map<String, Object> session, ConfigurationManager configurationManager) throws IOException, URISyntaxException {
         List<Map<String, Object>> servers = getServers(session);
         if (servers.isEmpty()) return;
 
@@ -100,7 +102,9 @@ public class S5_McpStep implements OnboardingProvider {
             String type = (String) server.get("type");
 
             if ("streamable-http".equals(type)) {
-                props.put("spring.ai.mcp.client.streamable-http.connections." + name + ".url", server.get("url"));
+                URI uri = new URI(server.get("url").toString());
+                props.put("spring.ai.mcp.client.streamable-http.connections." + name + ".url", uri.getScheme() + "://" + uri.getAuthority());
+                props.put("spring.ai.mcp.client.streamable-http.connections." + name + ".endpoint", uri.getPath());
                 Map<String, String> headers = (Map<String, String>) server.get("headers");
                 headers.forEach((k, v) ->
                         props.put("spring.ai.mcp.client.streamable-http.connections." + name + ".headers." + k, v));

@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ai.tool.annotation.Tool;
 
+import java.net.URI;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -38,6 +39,9 @@ public class McpTool {
         }
         try {
             Map<String, Object> props = new LinkedHashMap<>();
+            URI uri = new URI(url);
+            props.put("spring.ai.mcp.client.streamable-http.connections." + name + ".url", uri.getScheme() + "://" + uri.getAuthority());
+            props.put("spring.ai.mcp.client.streamable-http.connections." + name + ".endpoint", uri.getPath());
             props.put("spring.ai.mcp.client.streamable-http.connections." + name + ".url", url);
             if (headers != null && !headers.isBlank()) {
                 for (String line : headers.split("\n")) {

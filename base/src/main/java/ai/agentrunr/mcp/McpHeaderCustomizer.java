@@ -1,16 +1,13 @@
 package ai.agentrunr.mcp;
 
-import io.modelcontextprotocol.client.transport.customizer.McpSyncHttpClientRequestCustomizer;
-import io.modelcontextprotocol.common.McpTransportContext;
+import io.modelcontextprotocol.client.transport.HttpClientStreamableHttpTransport;
+import org.springframework.ai.mcp.customizer.McpClientCustomizer;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.stereotype.Component;
 
-import java.net.URI;
-import java.net.http.HttpRequest;
-
 @Component
 @EnableConfigurationProperties(McpConnectionsProperties.class)
-public class McpHeaderCustomizer implements McpSyncHttpClientRequestCustomizer {
+public class McpHeaderCustomizer implements McpClientCustomizer<HttpClientStreamableHttpTransport.Builder> {
 
     private final McpConnectionsProperties properties;
 
@@ -19,12 +16,10 @@ public class McpHeaderCustomizer implements McpSyncHttpClientRequestCustomizer {
     }
 
     @Override
-    public void customize(HttpRequest.Builder builder, String method, URI endpoint, String body, McpTransportContext context) {
-        String endpointStr = endpoint.toString();
-        properties.connections().forEach((name, connection) -> {
-            if (!connection.url().isBlank() && endpointStr.startsWith(connection.url())) {
-                connection.headers().forEach(builder::header);
-            }
-        });
+    public void customize(String name, HttpClientStreamableHttpTransport.Builder builder) {
+        McpConnectionsProperties.Connection connection = properties.connections().get(name);
+        if (connection != null && !connection.headers().isEmpty()) {
+            builder.customizeRequest(r -> connection.headers().forEach(r::header));
+        }
     }
 }

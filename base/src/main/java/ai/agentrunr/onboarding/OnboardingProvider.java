@@ -13,13 +13,19 @@ import java.util.Map;
  */
 public interface OnboardingProvider {
 
-    /** Unique URL-safe identifier used in {@code /onboarding/{stepId}}. */
+    /**
+     * Unique URL-safe identifier used in {@code /onboarding/{stepId}}.
+     */
     String getStepId();
 
-    /** Human-readable label shown in the sidebar step list. */
+    /**
+     * Human-readable label shown in the sidebar step list.
+     */
     String getStepTitle();
 
-    /** Classpath template path (without suffix), e.g. {@code "onboarding/steps/1-welcome"}. */
+    /**
+     * Classpath template path (without suffix), e.g. {@code "onboarding/steps/1-welcome"}.
+     */
     String getTemplatePath();
 
     /**
@@ -53,6 +59,6 @@ public interface OnboardingProvider {
      * Called once for all providers when the last content step completes successfully.
      * Default implementation is a no-op.
      */
-    default void saveConfiguration(Map<String, Object> session, ConfigurationManager configurationManager) throws java.io.IOException {
+    default void saveConfiguration(Map<String, Object> session, ConfigurationManager configurationManager) throws Exception {
     }
 }

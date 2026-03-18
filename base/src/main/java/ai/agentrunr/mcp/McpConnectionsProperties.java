@@ -11,7 +11,7 @@ public record McpConnectionsProperties(Map<String, Connection> connections) {
         connections = connections != null ? connections : Map.of();
     }
 
-    public record Connection(String url, Map<String, String> headers) {
+    public record Connection(String url, String endpoint, Map<String, String> headers) {
 
         public Connection {
             url = url != null ? url : "";

@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -91,8 +90,8 @@ public class OnboardingController {
                 for (OnboardingProvider p : steps) {
                     p.saveConfiguration(finalSession, configurationManager);
                 }
-            } catch (IOException e) {
-                throw new RuntimeException("Failed to persist onboarding configuration", e);
+            } catch (Exception e) {
+                throw new RuntimeException("Failed to save onboarding configuration", e);
             }
             clearOnboardingSession(session);
         }
