@@ -2,6 +2,7 @@ rootProject.name = 'JavaClaw'
 
 include 'base'
 include 'plugins'
+include 'plugins:discord'
 include 'plugins:telegram'
 include 'plugins:playwright'
 include 'plugins:brave'
@@ -11,4 +12,3 @@ include 'providers:google'
 include 'providers:ollama'
 include 'providers:openai'
 include 'app'
-

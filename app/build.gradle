@@ -11,6 +11,7 @@ dependencies {
     implementation project(':providers:ollama')
     implementation project(':providers:openai')
 
+    implementation project(':plugins:discord')
     implementation project(':plugins:telegram')
     implementation project(':plugins:playwright')
     implementation project(':plugins:brave')
